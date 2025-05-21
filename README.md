@@ -13,6 +13,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
+    <a href="#introduction">Getting Started</a>
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#requirements">Requirements</a></li>
@@ -25,6 +26,21 @@
   </ol>
 </details>
 
+<!-- INTRODUCTION -->
+## Introduction
+<div align="center">
+    <img src=".media/McMaster-logo.png" alt="Logo" width="200" height="100">
+</div>
+Welcome to our McMaster Engineering senior capstone project Tickermind: a Stock Scanner integrated with a local Large Language Model (LLM) for real-time sentiment analysis. This project aims to empower investors and traders by providing a tool that scans financial markets for stocks based on user-defined criteria and leverages advanced natural language processing to analyze market sentiment from news articles, social media, and other textual data sources. By running the LLM locally, the system ensures enhanced privacy, reduced latency, and independence from cloud-based services, making it a unique solution for real-time stock analysis in a fast-paced financial environment.   
+<br><br>
+The stock scanner combines robust data processing with cutting-edge AI to deliver actionable insights. It retrieves real-time market data using APIs, filters stocks based on technical indicators (e.g., moving averages, RSI), and applies sentiment analysis to gauge market perception of specific stocks. The local LLM processes unstructured text data to determine positive, negative, or neutral sentiment, providing a holistic view of a stock’s potential performance. Designed with scalability and user accessibility in mind, this project demonstrates the power of integrating AI with financial tools to support informed decision-making.
+
+## Key Features
+- **Real-Time Stock Scanning**: Filters stocks based on customizable technical indicators and fundamental metrics.
+- **Local LLM Sentiment Analysis**: Analyzes news and social media text using a locally hosted LLM for privacy and performance.
+- **User-Friendly Interface**: Intuitive dashboard for configuring scans and viewing sentiment-driven insights.
+- **Extensible Architecture**: Modular design allows easy integration of additional data sources or analysis modules.
+- **Privacy-Focused**: Local LLM processing eliminates dependency on external cloud services.
 
 <!-- GETTING STARTED -->
 ## Getting Started
