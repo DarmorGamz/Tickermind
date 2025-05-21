@@ -1,4 +1,4 @@
-# Senior Engineering Capstone
+# Tickermind
 
 <a name="readme-top"></a>
 
@@ -38,7 +38,7 @@
 
 #### Clone this repository
 ```bash
-git clone https://github.com/DarmorGamz/EngSeniorProject.git
+git clone https://github.com/DarmorGamz/Tickermind.git
 ```
 
 #### Build the Docker image
@@ -71,16 +71,16 @@ This project is intended for educational purposes only. The content, scripts, an
 
 The creators of this repository, Darren Morrison and Carter Glynn, are not responsible for any misuse, damage, or legal issues that may arise from using the code or concepts presented here. Users are advised to use the information and code at their own risk and discretion.
 
-[contributors-shield]: https://img.shields.io/github/contributors/DarmorGamz/EngSeniorProject.svg?style=for-the-badge
-[contributors-url]: https://github.com/DarmorGamz/EngSeniorProject/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/DarmorGamz/EngSeniorProject.svg?style=for-the-badge
-[forks-url]: https://github.com/DarmorGamz/EngSeniorProjectm/network/members
-[stars-shield]: https://img.shields.io/github/stars/DarmorGamz/EngSeniorProject.svg?style=for-the-badge
-[stars-url]: https://github.com/DarmorGamz/EngSeniorProject/stargazers
-[issues-shield]: https://img.shields.io/github/issues/DarmorGamz/EngSeniorProject.svg?style=for-the-badge
-[issues-url]: https://github.com/DarmorGamz/EngSeniorProject/issues
-[license-shield]: https://img.shields.io/github/license/DarmorGamz/EngSeniorProject.svg?style=for-the-badge
-[license-url]: https://github.com/DarmorGamz/EngSeniorProject/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/DarmorGamz/Tickermind.svg?style=for-the-badge
+[contributors-url]: https://github.com/DarmorGamz/Tickermind/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/DarmorGamz/Tickermind.svg?style=for-the-badge
+[forks-url]: https://github.com/DarmorGamz/Tickermindm/network/members
+[stars-shield]: https://img.shields.io/github/stars/DarmorGamz/Tickermind.svg?style=for-the-badge
+[stars-url]: https://github.com/DarmorGamz/Tickermind/stargazers
+[issues-shield]: https://img.shields.io/github/issues/DarmorGamz/Tickermind.svg?style=for-the-badge
+[issues-url]: https://github.com/DarmorGamz/Tickermind/issues
+[license-shield]: https://img.shields.io/github/license/DarmorGamz/Tickermind.svg?style=for-the-badge
+[license-url]: https://github.com/DarmorGamz/Tickermind/blob/master/LICENSE.txt
 
 
 <!-- Start Docker -->
