@@ -4,8 +4,8 @@ FROM node:24-slim
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package.json package-lock.json ./
+# Copy package.json 
+COPY package.json .
 
 # Install dependencies
 RUN npm install
