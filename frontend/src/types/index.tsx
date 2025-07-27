@@ -15,3 +15,10 @@ export interface ColumnConfig {
   label: string;
   optional: boolean;
 }
+
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  token?: string;
+}

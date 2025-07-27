@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Package, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm: React.FC = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -19,7 +21,9 @@ const LoginForm: React.FC = () => {
     }
 
     const success = await login(email, password);
-    if (!success) {
+    if (success) {
+      navigate('/dashboard');
+    } else {
       setError('Invalid credentials. Please try again.');
     }
   };
@@ -102,7 +106,7 @@ const LoginForm: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="w-full bg-[#1a202c] justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {isLoading ? 'Signing in...' : 'Sign in'}
               </button>
@@ -112,7 +116,7 @@ const LoginForm: React.FC = () => {
           <div className="mt-6">
             <div className="text-sm text-gray-600">
               <p className="font-medium">Demo Credentials:</p>
-              <p>Email: admin@example.com</p>
+              <p>Email: god@example.com</p>
               <p>Password: any password</p>
             </div>
           </div>
