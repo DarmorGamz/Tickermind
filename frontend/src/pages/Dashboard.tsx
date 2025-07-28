@@ -85,39 +85,39 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black text-white">
-    <main className="container mx-auto px-4 py-6 max-w-full">
-        <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">Stock Screener</h1>
-        <p>Find and analyze stocks with our powerful screening tool</p>
-        </div>
-
-        {loading ? (
-        <div className="bg-gray-800 rounded-lg p-8 text-center border border-gray-700">
-            <p className="text-gray-300">Loading...</p>
-        </div>
-        ) : error ? (
-        <div className="bg-red-900 rounded-lg p-8 text-center border border-red-700">
-            <p className="text-red-300">Error: {error}</p>
-        </div>
-        ) : (
-        <>
-            <SearchFilters
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            columns={columns}
-            visibleColumns={visibleColumns}
-            toggleColumn={toggleColumn}
-            />
-            {filteredStocks.length > 0 ? (
-            <StockTable stocks={filteredStocks} visibleColumns={visibleColumns} />
-            ) : (
-            <div className="bg-gray-800 rounded-lg p-8 text-center border border-gray-700">
-                <p className="text-gray-300">No stocks found matching "{searchTerm}"</p>
+        <main className="container mx-auto px-4 py-6 max-w-full">
+            <div className="mb-6">
+            <h1 className="text-2xl font-bold mb-2">Stock Screener</h1>
+            <p>Find and analyze stocks with our powerful screening tool</p>
             </div>
+
+            {loading ? (
+            <div className="bg-gray-800 rounded-lg p-8 text-center border border-gray-700">
+                <p className="text-gray-300">Loading...</p>
+            </div>
+            ) : error ? (
+            <div className="bg-red-900 rounded-lg p-8 text-center border border-red-700">
+                <p className="text-red-300">Error: {error}</p>
+            </div>
+            ) : (
+            <>
+                <SearchFilters
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                columns={columns}
+                visibleColumns={visibleColumns}
+                toggleColumn={toggleColumn}
+                />
+                {filteredStocks.length > 0 ? (
+                <StockTable stocks={filteredStocks} visibleColumns={visibleColumns} />
+                ) : (
+                <div className="bg-gray-800 rounded-lg p-8 text-center border border-gray-700">
+                    <p className="text-gray-300">No stocks found matching "{searchTerm}"</p>
+                </div>
+                )}
+            </>
             )}
-        </>
-        )}
-    </main>
+        </main>
     </div>
   );
 };

@@ -5,7 +5,7 @@ import Navbar from './Navbar';
 const Layout: React.FC = () => {;
 
   return (
-    <div className="h-screen bg-gray-50 flex flex-col">
+    <div className="h-screen bg-black flex flex-col">
       <Navbar />
       <div className="flex flex-1 overflow-hidden">
         <main className="flex-1 overflow-auto p-4 md:p-6">

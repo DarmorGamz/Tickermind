@@ -8,31 +8,16 @@ const Navbar: React.FC = () => {
   const location = useLocation();
   const { user } = useAuth();
 
-  const getPageTitle = () => {
-    switch(location.pathname) {
-      case '/dashboard':
-        return 'Dashboard';
-      default:
-        return 'Tickermind';
-    }
-  };
-
   return (
-    <nav className="bg-black px-4 py-3 flex justify-between items-center">
+    <nav className="bg-[#181818] px-4 py-3 flex justify-between items-center">
       <div className="flex items-center space-x-2 cursor-pointer" onClick={() => window.location.reload()}>
         <ChartCandlestick className="h-6 w-6" />
         <span className="text-white font-bold text-xl">TickerMind</span>
       </div>
-      
-      <div className="flex items-center space-x-3">
-        <h1 className="text-lg md:text-xl font-semibold text-gray-900 truncate">
-          {getPageTitle()}
-        </h1>
-      </div>
 
       <div className="relative flex items-center space-x-2">
-        <div className='flex items-center space-x-2 p-2 cursor-pointer rounded-2xl border-2 border-gray-600 hover:border-blue-500 hover:bg-blue-950 transition-colors duration-300'>
-          <div className="h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center  overflow-hidden ">
+        <div className='flex items-center space-x-2 p-2 cursor-pointer rounded-2xl border-2 border-[#181818] hover:border-blue-500 hover:bg-blue-950 transition-colors duration-300'>
+          <div className="h-8 w-8 rounded-full hover:border-blue-500 bg-gray-700 flex items-center justify-center overflow-hidden ">
             <User className="h-5 w-5 text-gray-300" />
           </div>
           <span className="truncate max-w-24 md:max-w-none">{user?.email}</span>
