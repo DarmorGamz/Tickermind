@@ -1,0 +1,57 @@
+version: '3'
+services:
+  traefik:
+    image: traefik:latest
+    container_name: traefik
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command:
+      - --api.insecure=true
+      - --providers.docker=true
+      - "--providers.docker.exposedbydefault=false"
+      - --entrypoints.web.address=:80
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.traefik.rule=Host(`traefik.localhost`)
+      - traefik.http.routers.traefik.service=api@internal
+      - traefik.http.routers.traefik.entrypoints=web
+
+  tickermind-web:
+    build: 
+      context: .
+      dockerfile: Dockerfile.web.dev
+    container_name: tickermind-web
+    environment:
+      - VITE_HOST=0.0.0.0
+      - DOMAIN=${DOMAIN:-tickermind.localhost}
+    restart: unless-stopped
+    # volumes:
+      # - ./frontend:/app
+      # - /app/node_modules
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.tickermind-web.rule=Host(`tickermind.localhost`)
+      - traefik.http.routers.tickermind-web.entrypoints=web
+      - "traefik.http.routers.tickermind.service=tickermind-srv"
+      - "traefik.http.services.tickermind-srv.loadbalancer.server.port=3000"
+
+  tickermind-api:
+    build: 
+      context: .
+      dockerfile: Dockerfile.api.dev
+    container_name: tickermind-api
+    volumes:
+      - ./app/private/data/:/data
+      - ./app/private/src:/app # enables live edits and reload.
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.tickermind-api.rule=Host(`tickermind.localhost`) && PathPrefix(`/api`)
+      - traefik.http.routers.tickermind-api.entrypoints=web
+      - traefik.http.routers.tickermind-api.middlewares=stripapi
+      - traefik.http.middlewares.stripapi.stripprefix.prefixes=/api
+      - traefik.http.services.tickermind-api.loadbalancer.server.port=8010
