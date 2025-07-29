@@ -1,0 +1,22 @@
+{
+    "files.exclude": {
+        // Ignore common version control directories
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+
+        // Documentation files, in my way
+        "**/SECURITY.md": true,
+        "**/CONTRIBUTING.md": true,
+        "**/CHANGELOG.md": true,
+        "**/CODE_OF_CONDUCT.md": true,
+        "**/README.md": true,
+        "**/LICENSE.txt": true,
+
+        // Media files, in my way
+        "**/.docs": true,
+        "**/.media": true,
+    }
+}
