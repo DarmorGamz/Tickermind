@@ -55,3 +55,22 @@ services:
       - traefik.http.routers.tickermind-api.middlewares=stripapi
       - traefik.http.middlewares.stripapi.stripprefix.prefixes=/api
       - traefik.http.services.tickermind-api.loadbalancer.server.port=8010
+    
+  adminer:
+    image: adminer:latest
+    container_name: tickermind-adminer
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.adminer.rule=Host(`tickermind.localhost`) && PathPrefix(`/adminer`)
+      - traefik.http.routers.adminer.entrypoints=web
+      - traefik.http.routers.adminer.middlewares=stripadminer
+      - traefik.http.middlewares.stripadminer.stripprefix.prefixes=/adminer
+      - traefik.http.services.adminer.loadbalancer.server.port=8080
+    volumes:
+      - ./app/private/adminer/plugins/login-password-less.php:/var/www/html/plugins-enabled/login-password-less.php
+      - ./app/private/data/:/data
+    environment:
+      - ADMINER_DEFAULT_SERVER=
+      - ADMINER_DESIGN=pepa-linha
+      # Sqlite, username:BLANK, password: admin, database: /data/mydb.db
