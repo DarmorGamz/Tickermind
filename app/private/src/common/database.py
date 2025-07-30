@@ -38,14 +38,19 @@ class Database:
         with self._get_cursor() as cursor:
             cursor.execute(f"""
                 CREATE TABLE IF NOT EXISTS {self.primary_table} (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    ticker TEXT NOT NULL UNIQUE
                 )
             """)
             cursor.execute(f"""
                 CREATE TABLE IF NOT EXISTS {self.secondary_table} (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     {self.foreign_key} INTEGER,
-                    FOREIGN KEY ({self.foreign_key}) REFERENCES {self.primary_table}(id)
+                    date TEXT NOT NULL,
+                    close REAL NOT NULL,
+                    volume INTEGER NOT NULL,
+                    FOREIGN KEY ({self.foreign_key}) REFERENCES {self.primary_table}(id),
+                    UNIQUE ({self.foreign_key}, date)
                 )
             """)
 
