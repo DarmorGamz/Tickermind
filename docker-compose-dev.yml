@@ -1,4 +1,3 @@
-version: '3'
 services:
   traefik:
     image: traefik:latest
@@ -30,8 +29,7 @@ services:
       - DOMAIN=${DOMAIN:-tickermind.localhost}
     restart: unless-stopped
     # volumes:
-      # - ./frontend:/app
-      # - /app/node_modules
+    #   - ./app/public:/app # enables live edits and reload.
     labels:
       - traefik.enable=true
       - traefik.http.routers.tickermind-web.rule=Host(`tickermind.localhost`)
