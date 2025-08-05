@@ -30,4 +30,4 @@ Dockerfile.
 Thumbs.db
 
 # Data 
-*data/
+*/private/data/
