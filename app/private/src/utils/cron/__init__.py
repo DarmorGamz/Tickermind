@@ -4,7 +4,7 @@ from ..tasks import get_ticker_data
 scheduler = AsyncIOScheduler()
 
 async def startup():
-    scheduler.add_job(get_ticker_data, 'interval', seconds=60)
+    scheduler.add_job(get_ticker_data, 'interval', seconds=10)
     scheduler.start()
 
 def shutdown():
