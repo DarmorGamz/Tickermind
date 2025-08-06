@@ -15,6 +15,9 @@ import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
+import { TrendingUp, TrendingDown, Star, CalendarCheck } from "lucide-react"
+import InfoCard from './components/info-card'
+
 
 export default function Dashboard() {
   return (
@@ -60,102 +63,85 @@ export default function Dashboard() {
             <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                  <CardTitle className='text-sm font-medium'>
-                    Total Revenue
+                  <CardTitle className='text-sm font-medium flex items-center gap-1'>
+                    Stock of the Day
+                    <InfoCard 
+                      title='Stock of the Day'                      
+                      text='The stock which has the highest confidence metric'
+                      size={4}
+                    />
                   </CardTitle>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    className='text-muted-foreground h-4 w-4'
-                  >
-                    <path d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' />
-                  </svg>
+                  <Star
+                    className='w-5 h-5 text-muted-foreground'
+                  />
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>$45,231.89</div>
+                  <div className='text-2xl font-bold'>{/* */}STOCK PLACEHOLDER</div>
                   <p className='text-muted-foreground text-xs'>
-                    +20.1% from last month
+                    {/* */}CONFIDENCE PLACEHOLDER% confidence in next-day value {}INCREASE/DECREASE
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                  <CardTitle className='text-sm font-medium'>
-                    Subscriptions
+                  <CardTitle className='text-sm font-medium flex items-center gap-1'>
+                    Yesterday's Winner
+                    <InfoCard 
+                      title="Yesterday's Winner"                      
+                      text='The stock which rose the highest in value the previous day'
+                      size={4}
+                    />
                   </CardTitle>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    className='text-muted-foreground h-4 w-4'
-                  >
-                    <path d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2' />
-                    <circle cx='9' cy='7' r='4' />
-                    <path d='M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75' />
-                  </svg>
+                  <CalendarCheck
+                    className='w-5 h-5 text-muted-foreground'
+                  />
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+2350</div>
+                  <div className='text-2xl font-bold'>{/* */}STOCK PLACEHOLDER</div>
                   <p className='text-muted-foreground text-xs'>
-                    +180.1% from last month
+                    {/* */}CONFIDENCE PLACEHOLDER% confidence in next-day value increase
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                  <CardTitle className='text-sm font-medium'>Sales</CardTitle>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    className='text-muted-foreground h-4 w-4'
-                  >
-                    <rect width='20' height='14' x='2' y='5' rx='2' />
-                    <path d='M2 10h20' />
-                  </svg>
+                  <CardTitle className='text-sm font-medium flex items-center gap-1'>
+                    Upward Trending
+                    <InfoCard 
+                      title='Upward Trending'                      
+                      text='The stock which has the highest confidence to increase in value today'
+                      size={4}
+                    />
+                  </CardTitle>
+                  <TrendingUp
+                    className='w-5 h-5 text-muted-foreground'
+                  />
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+12,234</div>
+                  <div className='text-2xl font-bold'>{/* */}STOCK PLACEHOLDER</div>
                   <p className='text-muted-foreground text-xs'>
-                    +19% from last month
+                    {/* */}CONFIDENCE PLACEHOLDER% confidence in next-day value increase
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                  <CardTitle className='text-sm font-medium'>
-                    Active Now
+                  <CardTitle className='text-sm font-medium flex items-center gap-1'>
+                    Downward Trending
+                    <InfoCard 
+                      title='Downward Trending'                      
+                      text='The stock which has the highest confidence to decrease in value today'
+                      size={4}
+                    />
                   </CardTitle>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    className='text-muted-foreground h-4 w-4'
-                  >
-                    <path d='M22 12h-4l-3 9L9 3l-3 9H2' />
-                  </svg>
+                  <TrendingDown
+                    className='w-5 h-5 text-muted-foreground'
+                  />
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+573</div>
+                  <div className='text-2xl font-bold'>{/* */}STOCK PLACEHOLDER</div>
                   <p className='text-muted-foreground text-xs'>
-                    +201 since last hour
+                    {/* */}CONFIDENCE PLACEHOLDER% confidence in next-day value decrease
                   </p>
                 </CardContent>
               </Card>
