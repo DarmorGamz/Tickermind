@@ -1,6 +1,5 @@
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { columns } from './components/columns'
 import { DataTable } from './components/data-table'
@@ -12,7 +11,6 @@ export default function Tasks() {
   return (
     <TasksProvider>
       <Header fixed>
-        <Search />
         <div className='ml-auto flex items-center space-x-4'>
           <ThemeSwitch />
         </div>
