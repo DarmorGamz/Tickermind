@@ -31,3 +31,4 @@ Thumbs.db
 
 # Data 
 */private/data/
+*.log
