@@ -20,8 +20,6 @@ import {
   IconUsers,
 } from '@tabler/icons-react'
 import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react'
-// import { ClerkLogo } from '@/assets/clerk-logo'
-// import { TickermindLogo } from '@/assets/tickermind-logo.png'
 import { type SidebarData } from '../types'
 
 export const sidebarData: SidebarData = {
