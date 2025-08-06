@@ -1,7 +1,7 @@
 FROM node:24-slim
 WORKDIR /app
 COPY app/public/package.json .
-RUN npm cache clean --force
+# RUN npm cache clean --force
 RUN npm install
 COPY app/public/. .
 EXPOSE 3000

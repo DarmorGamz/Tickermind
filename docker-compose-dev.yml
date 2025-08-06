@@ -24,12 +24,13 @@ services:
       context: .
       dockerfile: Dockerfile.web.dev
     container_name: tickermind-web
+    user: root
     environment:
       - VITE_HOST=0.0.0.0
       - DOMAIN=${DOMAIN:-tickermind.localhost}
     restart: unless-stopped
-    # volumes:
-    #   - ./app/public:/app # enables live edits and reload.
+    volumes:
+    - ./app/public/src:/app/src
     labels:
       - traefik.enable=true
       - traefik.http.routers.tickermind-web.rule=Host(`tickermind.localhost`)

@@ -23,4 +23,12 @@ export default defineConfig({
       '@tabler/icons-react': '@tabler/icons-react/dist/esm/icons/index.mjs',
     },
   },
+  server: {
+    watch: {
+      usePolling: true,
+    },
+    host: "0.0.0.0",
+    port: 3000,
+    hmr: true
+  },
 })
