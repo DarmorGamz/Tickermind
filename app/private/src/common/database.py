@@ -68,13 +68,17 @@ class Database:
             cursor.close()
 
     def execute(self, query: str, params: Tuple = ()) -> None:
-        """Executes a SQL query with optional parameters.
+        """Executes an SQL query with optional parameters.
 
         Args:
-            query (str): SQL query with {primary_table} or {secondary_table} placeholders.
+            query (str): SQL query with {primary_table}, {secondary_table}, or {foreign_key} placeholders.
             params (Tuple, optional): Parameters for the SQL query.
         """
-        query = query.replace("{primary_table}", self.primary_table).replace("{secondary_table}", self.secondary_table)
+        query = (
+            query.replace("{primary_table}", self.primary_table)
+            .replace("{secondary_table}", self.secondary_table)
+            .replace("{foreign_key}", self.foreign_key)
+        )
         with self._get_cursor() as cursor:
             cursor.execute(query, params)
 
@@ -82,13 +86,18 @@ class Database:
         """Fetches a single row from the database as a dictionary.
 
         Args:
-            query (str): SQL query with {primary_table} or {secondary_table} placeholders.
+            query (str): SQL query with {primary_table}, {secondary_table}, or {foreign_key} placeholders.
             params (Tuple, optional): Parameters for the SQL query.
 
         Returns:
             dict: A dictionary representing the fetched row, or None if no results.
         """
-        query = query.replace("{primary_table}", self.primary_table).replace("{secondary_table}", self.secondary_table)
+        # Define foreign_key or pass it as an attribute of the class
+        query = (
+            query.replace("{primary_table}", self.primary_table)
+            .replace("{secondary_table}", self.secondary_table)
+            .replace("{foreign_key}", self.foreign_key)  # Add replacement for foreign_key
+        )
         with self._get_cursor() as cursor:
             cursor.execute(query, params)
             result = cursor.fetchone()
