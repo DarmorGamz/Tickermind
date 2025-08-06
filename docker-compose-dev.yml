@@ -72,4 +72,4 @@ services:
     environment:
       - ADMINER_DEFAULT_SERVER=
       - ADMINER_DESIGN=pepa-linha
-      # Sqlite, username:BLANK, password: admin, database: /data/mydb.db
+      # Sqlite, username:BLANK, password: admin, database: /data/stocks.db
