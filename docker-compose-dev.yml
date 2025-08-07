@@ -59,6 +59,7 @@ services:
     image: adminer:latest
     container_name: tickermind-adminer
     restart: unless-stopped
+    user: root
     labels:
       - traefik.enable=true
       - traefik.http.routers.adminer.rule=Host(`tickermind.localhost`) && PathPrefix(`/adminer`)
@@ -72,4 +73,4 @@ services:
     environment:
       - ADMINER_DEFAULT_SERVER=
       - ADMINER_DESIGN=pepa-linha
-      # Sqlite, username:BLANK, password: admin, database: /data/mydb.db
+      # Sqlite, username:BLANK, password: admin, database: /data/stocks.db

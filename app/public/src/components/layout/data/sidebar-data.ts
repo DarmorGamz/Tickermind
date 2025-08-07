@@ -19,10 +19,10 @@ import {
   IconUserOff,
   IconUsers,
 } from '@tabler/icons-react'
+
 import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react'
-// import { ClerkLogo } from '@/assets/clerk-logo'
-// import { TickermindLogo } from '@/assets/tickermind-logo.png'
 import { type SidebarData } from '../types'
+import { TickermindLogo } from '@/assets/tickermind-logo'
 
 export const sidebarData: SidebarData = {
   user: {
@@ -33,7 +33,7 @@ export const sidebarData: SidebarData = {
   teams: [
     {
       name: 'Tickermind',
-      logo: Command,
+      logo: TickermindLogo,
       plan: '',
     },
   ],
