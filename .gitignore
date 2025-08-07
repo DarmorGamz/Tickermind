@@ -30,5 +30,6 @@ Dockerfile.
 Thumbs.db
 
 # Data 
-*/private/data/
+*/private/data/*
+!*/private/data/stocks.db
 *.log

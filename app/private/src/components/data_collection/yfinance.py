@@ -1,7 +1,7 @@
 import yfinance as yf
 import os
 import pandas as pd
-from typing import List, Optional, Union
+from typing import Dict, List, Optional, Union
 from utils.logs import setup_logger
 
 logger = setup_logger(__name__)
@@ -39,3 +39,38 @@ async def get_latest_stock_price(ticker: str, interval: str = "1d") -> Optional[
     except Exception as e:
         logger.error(f"Failed to fetch latest price for {ticker}: {str(e)}")
         raise StockDataError(f"Error fetching latest price for {ticker}: {str(e)}")
+    
+async def get_latest_stock_prices(tickers: List[str], interval: str = "1d") -> List[Dict]:
+    """
+    Fetch the latest stock prices for a list of tickers with specified interval.
+    """
+    valid_intervals = ["1d", "5d", "1mo", "3mo", "6mo"]
+    if interval not in valid_intervals:
+        logger.warning(f"Invalid interval {interval}, defaulting to 1d")
+        interval = "1d"
+        
+    results = []
+    try:
+        logger.info(f"Fetching latest prices for {tickers} with {interval} interval")
+        for ticker in tickers:
+            stock = yf.Ticker(ticker)
+            df = stock.history(period=interval, interval=interval)
+            
+            if df.empty:
+                logger.warning(f"No recent data found for {ticker}")
+                results.append(None)
+                continue
+                
+            latest_data = {
+                "ticker": ticker,
+                "date": df.index[-1].strftime("%Y-%m-%d %H:%M:%S"),
+                "close": df["Close"].iloc[-1],
+                "volume": df["Volume"].iloc[-1]
+            }
+            results.append(latest_data)
+        
+        return results
+        
+    except Exception as e:
+        logger.error(f"Failed to fetch latest prices for {tickers}: {str(e)}")
+        raise StockDataError(f"Error fetching latest prices for {tickers}: {str(e)}")

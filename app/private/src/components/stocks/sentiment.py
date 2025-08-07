@@ -18,7 +18,7 @@ class sentiment:
                 
                 # Query to get all sentiment rows with ticker and all relevant fields
                 query = """
-                    SELECT s.ticker, n.sentiment_label, n.date, n.title, n.description, n.content, n.source
+                    SELECT s.ticker, n.sentiment_label, n.date, n.description, n.source
                     FROM {news_table} n
                     LEFT JOIN {primary_table} s ON n.{foreign_key} = s.id
                     ORDER BY n.date DESC
@@ -31,9 +31,7 @@ class sentiment:
                         "ticker": row["ticker"],
                         "Sentiment_Label": row["sentiment_label"] if row["sentiment_label"] else "N/A",
                         "Date": row["date"],
-                        "Title": row["title"],
                         "Description": row["description"] if row["description"] else "N/A",
-                        "Content": row["content"] if row["content"] else "N/A",
                         "Source": row["source"]
                     }
                     for row in results

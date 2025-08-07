@@ -7,55 +7,102 @@ from datetime import datetime, timezone
 import pandas as pd
 
 async def get_ticker_data():
-    from components.data_collection.yfinance import get_latest_stock_price
+    from components.data_collection.yfinance import get_latest_stock_prices
     tickers = ["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "TSLA", "META", "JPM", "V"]
     db = Database("../data/stocks.db", primary_table="stocks", secondary_table="stock_data", foreign_key="stock_id")
 
-    async def process_ticker(ticker):
-        latest_price = await get_latest_stock_price(ticker, interval="1d")
-        if not latest_price:
-            return
+    async def process_tickers(tickers):
+        latest_prices = await get_latest_stock_prices(tickers, interval="1d")
+        
+        for latest_price in latest_prices:
+            if not latest_price:
+                continue
 
-        # Check if ticker exists in primary table (stocks)
-        ticker_record = await db.fetch_one("SELECT id FROM {primary_table} WHERE ticker = ?", (ticker,))
-        if not ticker_record:
-            await db.execute("INSERT INTO {primary_table} (ticker) VALUES (?)", (ticker,))
+            ticker = latest_price["ticker"]
+            # Check if ticker exists in primary table (stocks)
             ticker_record = await db.fetch_one("SELECT id FROM {primary_table} WHERE ticker = ?", (ticker,))
+            if not ticker_record:
+                await db.execute("INSERT INTO {primary_table} (ticker) VALUES (?)", (ticker,))
+                ticker_record = await db.fetch_one("SELECT id FROM {primary_table} WHERE ticker = ?", (ticker,))
 
-        # Check if data for this timestamp already exists
-        existing = await db.fetch_one(
-            "SELECT id FROM {secondary_table} WHERE {foreign_key} = ? AND date = ?",
-            (ticker_record["id"], latest_price["date"])
-        )
-        if existing:
-            return
+            # Check if data for this timestamp already exists
+            existing = await db.fetch_one(
+                "SELECT id FROM {secondary_table} WHERE {foreign_key} = ? AND date = ?",
+                (ticker_record["id"], latest_price["date"])
+            )
+            if existing:
+                continue
 
-        # Insert stock data into secondary table (stock_data)
-        await db.execute(
-            """
-            INSERT INTO {secondary_table} ({foreign_key}, date, close, volume)
-            VALUES (?, ?, ?, ?)
-            """,
-            (ticker_record["id"], latest_price["date"], latest_price["close"], latest_price["volume"])
-        )
+            # Insert stock data into secondary table (stock_data)
+            await db.execute(
+                """
+                INSERT INTO {secondary_table} ({foreign_key}, date, close, volume)
+                VALUES (?, ?, ?, ?)
+                """,
+                (ticker_record["id"], latest_price["date"], latest_price["close"], latest_price["volume"])
+            )
 
-    # Process tickers concurrently
-    await asyncio.gather(*[process_ticker(ticker) for ticker in tickers])
+    # Process all tickers at once
+    await process_tickers(tickers)
 
     # Async file write
     os.makedirs('/data', exist_ok=True)
     async with aiofiles.open('/data/task_log.txt', 'a') as f:
         await f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Processed {len(tickers)} tickers\n")
 
+async def get_nasdaq_data():
+    from components.data_collection.yfinance import get_latest_stock_prices, get_nasdaq_tickers
+    db = Database("../data/stocks.db", primary_table="stocks", secondary_table="stock_data", foreign_key="stock_id")
+    
+    async def process_tickers(tickers):
+        latest_prices = await get_latest_stock_prices(tickers, interval="1d")
+        
+        for latest_price in latest_prices:
+            if not latest_price:
+                continue
+
+            ticker = latest_price["ticker"]
+            # Check if ticker exists in primary table (stocks)
+            ticker_record = await db.fetch_one("SELECT id FROM {primary_table} WHERE ticker = ?", (ticker,))
+            if not ticker_record:
+                await db.execute("INSERT INTO {primary_table} (ticker) VALUES (?)", (ticker,))
+                ticker_record = await db.fetch_one("SELECT id FROM {primary_table} WHERE ticker = ?", (ticker,))
+
+            # Check if data for this timestamp already exists
+            existing = await db.fetch_one(
+                "SELECT id FROM {secondary_table} WHERE {foreign_key} = ? AND date = ?",
+                (ticker_record["id"], latest_price["date"])
+            )
+            if existing:
+                continue
+
+            # Insert stock data into secondary table (stock_data)
+            await db.execute(
+                """
+                INSERT INTO {secondary_table} ({foreign_key}, date, close, volume)
+                VALUES (?, ?, ?, ?)
+                """,
+                (ticker_record["id"], latest_price["date"], latest_price["close"], latest_price["volume"])
+            )
+
+    # Fetch NASDAQ tickers and process them
+    nasdaq_tickers = await get_nasdaq_tickers()
+    await process_tickers(nasdaq_tickers)
+
+    # Async file write
+    os.makedirs('/data', exist_ok=True)
+    async with aiofiles.open('/data/task_log.txt', 'a') as f:
+        await f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Processed {len(nasdaq_tickers)} NASDAQ tickers\n")
+
 async def get_news_data():
     from components.news_collection.tickertick import fetch_news_from_tickertick
-    tickers = ["AAPL"]
+    tickers = ["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "TSLA", "META", "JPM", "V"]
     db = Database("../data/stocks.db", primary_table="stocks", secondary_table="stock_data", news_table="news_table", foreign_key="stock_id")
     from_date = (datetime.now(timezone.utc).date() - pd.Timedelta(days=7)).strftime("%Y-%m-%d")
     to_date = datetime.now(timezone.utc).date().strftime("%Y-%m-%d")
 
-    async def process_ticker(ticker):
-        news_df = await fetch_news_from_tickertick(ticker, from_date, to_date)
+    async def process_tickers(tickers):
+        news_df = await fetch_news_from_tickertick(tickers, from_date, to_date)
 
         os.makedirs('/data', exist_ok=True)
         async with aiofiles.open('/data/news_log.txt', 'a') as f:
@@ -65,37 +112,38 @@ async def get_news_data():
         if news_df.empty:
             return
         
-        ticker_record = await db.fetch_one("SELECT id FROM {primary_table} WHERE ticker = ?", (ticker,))
-        if not ticker_record:
-            await db.execute("INSERT INTO {primary_table} (ticker) VALUES (?)", (ticker,))
+        for ticker in tickers:
             ticker_record = await db.fetch_one("SELECT id FROM {primary_table} WHERE ticker = ?", (ticker,))
-        
-        for _, row in news_df.iterrows():
-            existing = await db.fetch_one(
-                "SELECT id FROM {news_table} WHERE {foreign_key} = ? AND date = ? AND description = ?",
-                (ticker_record["id"], row["date"], row["description"])
-            )
-            async with aiofiles.open('/data/row.txt', 'a') as f:
-                await f.write(f"row: {row}\n")
-
-            if existing:
-                continue
-            await db.execute(
-                """
-                INSERT INTO {news_table} ({foreign_key}, date, title, description, content, source)
-                VALUES (?, ?, ?, ?, ?, ?)
-                """,
-                (
-                    ticker_record["id"],
-                    row["date"],
-                    row["title"],
-                    row["description"],
-                    row["content"],
-                    row["source"]
-                )
-            )
+            if not ticker_record:
+                await db.execute("INSERT INTO {primary_table} (ticker) VALUES (?)", (ticker,))
+                ticker_record = await db.fetch_one("SELECT id FROM {primary_table} WHERE ticker = ?", (ticker,))
             
-    await asyncio.gather(*[process_ticker(ticker) for ticker in tickers])
+            for _, row in news_df.iterrows():
+                existing = await db.fetch_one(
+                    "SELECT id FROM {news_table} WHERE {foreign_key} = ? AND date = ? AND description = ?",
+                    (ticker_record["id"], row["date"], row["description"])
+                )
+                async with aiofiles.open('/data/row.txt', 'a') as f:
+                    await f.write(f"row: {row}\n")
+
+                if existing:
+                    continue
+                await db.execute(
+                    """
+                    INSERT INTO {news_table} ({foreign_key}, date, title, description, content, source)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        ticker_record["id"],
+                        row["date"],
+                        "",
+                        row["description"],
+                        "",
+                        row["source"]
+                    )
+                )
+            
+    await process_tickers(tickers)
     os.makedirs('/data', exist_ok=True)
     async with aiofiles.open('/data/task_log.txt', 'a') as f:
         await f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Processed news for {len(tickers)} tickers\n")
@@ -103,13 +151,13 @@ async def get_news_data():
 async def create_sentiment_labels():
     db = Database("../data/stocks.db", primary_table="stocks", secondary_table="stock_data", news_table="news_table", foreign_key="stock_id")
     
-    # Fetch rows from news_table without sentiment label
-    query = "SELECT * FROM {news_table} WHERE sentiment_label IS NULL"
+    # Fetch rows from news_table without sentiment label and with non-empty description
+    query = "SELECT * FROM {news_table} WHERE sentiment_label IS NULL AND description IS NOT NULL AND description != ''"
     news_df = await db.fetch_all(query)
     
     if not news_df:
         async with aiofiles.open('/data/sentiment_log.txt', 'a') as f:
-            await f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - No unlabeled news rows found\n")
+            await f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - No unlabeled news rows with valid description found\n")
         return
     
     # Convert to DataFrame for processing
