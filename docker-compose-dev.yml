@@ -6,12 +6,13 @@ services:
       - "80:80"
       - "443:443"
     restart: always
+    user: root
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     command:
       - --api.insecure=true
       - --providers.docker=true
-      - "--providers.docker.exposedbydefault=false"
+      - --providers.docker.exposedbydefault=false
       - --entrypoints.web.address=:80
     labels:
       - traefik.enable=true
@@ -35,25 +36,29 @@ services:
       - traefik.enable=true
       - traefik.http.routers.tickermind-web.rule=Host(`tickermind.localhost`)
       - traefik.http.routers.tickermind-web.entrypoints=web
-      - "traefik.http.routers.tickermind.service=tickermind-srv"
-      - "traefik.http.services.tickermind-srv.loadbalancer.server.port=3000"
+      - traefik.http.services.tickermind-web.loadbalancer.server.port=3000
 
   tickermind-api:
     build: 
       context: .
       dockerfile: Dockerfile.api.dev
     container_name: tickermind-api
+    user: root
     volumes:
       - ./app/private/data/:/data
       - ./app/private/src:/app # enables live edits and reload.
     restart: unless-stopped
     labels:
       - traefik.enable=true
-      - traefik.http.routers.tickermind-api.rule=Host(`tickermind.localhost`) && PathPrefix(`/api`)
-      - traefik.http.routers.tickermind-api.entrypoints=web
-      - traefik.http.routers.tickermind-api.middlewares=stripapi
-      - traefik.http.middlewares.stripapi.stripprefix.prefixes=/api
-      - traefik.http.services.tickermind-api.loadbalancer.server.port=8010
+      - traefik.http.routers.tickermindapi.rule=Host(`api2.localhost`)
+      - traefik.http.routers.tickermindapi.entrypoints=web
+      - traefik.http.services.tickermindapi.loadbalancer.server.port=8010
+      - traefik.http.middlewares.cors.headers.accessControlAllowMethods=GET,POST,OPTIONS
+      - traefik.http.middlewares.cors.headers.accessControlAllowOriginList=http://tickermind.localhost,http://localhost:3000
+      - traefik.http.middlewares.cors.headers.accessControlAllowHeaders=Content-Type
+      - traefik.http.middlewares.cors.headers.accessControlMaxAge=100
+      - traefik.http.middlewares.cors.headers.addVaryHeader=true
+      - traefik.http.routers.tickermindapi.middlewares=cors
     
   adminer:
     image: adminer:latest
@@ -62,10 +67,8 @@ services:
     user: root
     labels:
       - traefik.enable=true
-      - traefik.http.routers.adminer.rule=Host(`tickermind.localhost`) && PathPrefix(`/adminer`)
+      - traefik.http.routers.adminer.rule=Host(`adminer.localhost`)
       - traefik.http.routers.adminer.entrypoints=web
-      - traefik.http.routers.adminer.middlewares=stripadminer
-      - traefik.http.middlewares.stripadminer.stripprefix.prefixes=/adminer
       - traefik.http.services.adminer.loadbalancer.server.port=8080
     volumes:
       - ./app/private/adminer/plugins/login-password-less.php:/var/www/html/plugins-enabled/login-password-less.php

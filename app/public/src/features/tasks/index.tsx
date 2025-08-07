@@ -15,7 +15,7 @@ export default function Tasks() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch('/api?Cmd=Tickers.GetList')
+        const res = await fetch('http://api2.localhost?Cmd=Tickers.GetList')
         const raw = await res.json()
         // Assuming: [ { ticker: 'AAPL', Close: 200 }, { ticker: 'MSFT', Close: 300 }, ... ]
         const parsed = raw.data.map((item: any) => ({

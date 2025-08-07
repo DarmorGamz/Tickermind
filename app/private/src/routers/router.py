@@ -3,10 +3,10 @@ from fastapi import APIRouter, HTTPException, Request, UploadFile
 router = APIRouter()
 
 @router.get("/")
-def handle_get(request: Request):
+async def handle_get(request: Request):
     varsIn = dict(request.query_params)
     try:
-        return ApiAccess().RunCmd(varsIn)
+        return await ApiAccess().RunCmd(varsIn)
     except Exception as e:
         import traceback
         print(traceback.format_exc())
@@ -22,7 +22,7 @@ async def handle_post(request: Request):
     varsIn = dict(request.query_params)
     varsIn.update(body)
     try:
-        return ApiAccess().RunCmd(varsIn)
+        return await ApiAccess().RunCmd(varsIn)
     except Exception as e:
         import traceback
         print(traceback.format_exc())
@@ -32,7 +32,7 @@ class ApiAccess():
     def __init__(self):
         pass
 
-    def RunCmd(self, varsIn: dict = None):
+    async def RunCmd(self, varsIn: dict = None):
         try:
             cmd = varsIn.get("Cmd")
             if cmd is None:
@@ -45,6 +45,12 @@ class ApiAccess():
             match model:
                 case "Ping":
                     return {"message": "pong"}
+                case "Tickers":
+                    import components.stocks.tickers as tickers
+                    tickers_instance = tickers.tickers()
+
+                    varsIn1 = {}
+                    return await tickers_instance.Gsad(op, varsIn1)
                 case _:
                     raise HTTPException(400, "Invalid Cmd")
         except Exception as e:
