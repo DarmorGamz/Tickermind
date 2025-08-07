@@ -59,6 +59,7 @@ services:
     image: adminer:latest
     container_name: tickermind-adminer
     restart: unless-stopped
+    user: root
     labels:
       - traefik.enable=true
       - traefik.http.routers.adminer.rule=Host(`tickermind.localhost`) && PathPrefix(`/adminer`)

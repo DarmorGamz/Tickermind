@@ -1,12 +1,14 @@
 import aiosqlite
 from contextlib import asynccontextmanager
 from typing import List, Tuple, Any
+import os
+import aiofiles
 
 class Database:
     """Singleton class for managing async SQLite database connections and queries."""
     _instance = None
 
-    def __new__(cls, db_path: str= "", primary_table: str= "", secondary_table: str= "", news_table: str = "", foreign_key: str= ""):
+    def __new__(cls, db_path: str= "", primary_table: str= "", secondary_table: str= "", news_table: str = "news_table", foreign_key: str= "stock_id"):
         """Ensures a single instance of the Database class.
 
         Args:
@@ -65,9 +67,14 @@ class Database:
                     description TEXT,
                     content TEXT,
                     source TEXT NOT NULL,
+                    sentiment_label TEXT,
                     FOREIGN KEY ({self.foreign_key}) REFERENCES {self.primary_table}(id),
-                    UNIQUE ({self.foreign_key}, date, title)
+                    UNIQUE ({self.foreign_key}, date, description)
                 )
+            """)
+            # Add sentiment_label column if it doesn't exist
+            await cursor.execute(f"""
+                ALTER TABLE {self.news_table} ADD COLUMN sentiment_label TEXT
             """)
             await self.conn.commit()
 
@@ -99,6 +106,12 @@ class Database:
             .replace("{foreign_key}", self.foreign_key)
             .replace("{news_table}", self.news_table)
         )
+
+        os.makedirs('/data', exist_ok=True)
+        async with aiofiles.open('/data/execute.txt', 'a') as f:
+            await f.write(f"query: {query}\n")
+            await f.write(f"params: {params}\n")
+
         async with self._get_cursor() as cursor:
             await cursor.execute(query, params)
 
@@ -118,6 +131,12 @@ class Database:
             .replace("{foreign_key}", self.foreign_key)
             .replace("{news_table}", self.news_table)
         )
+
+        os.makedirs('/data', exist_ok=True)
+        async with aiofiles.open('/data/query.txt', 'a') as f:
+            await f.write(f"query: {query}\n")
+            await f.write(f"params: {params}\n")
+
         async with self._get_cursor() as cursor:
             await cursor.execute(query, params)
             result = await cursor.fetchone()
