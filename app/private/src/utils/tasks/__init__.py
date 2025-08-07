@@ -104,7 +104,7 @@ async def create_sentiment_labels():
     db = Database("../data/stocks.db", primary_table="stocks", secondary_table="stock_data", news_table="news_table", foreign_key="stock_id")
     
     # Fetch rows from news_table without sentiment label
-    query = "SELECT * FROM {news_table} WHERE sentiment IS NULL"
+    query = "SELECT * FROM {news_table} WHERE sentiment_label IS NULL"
     news_df = await db.fetch_all(query)
     
     if not news_df:
@@ -118,16 +118,28 @@ async def create_sentiment_labels():
     async with aiofiles.open('/data/sentiment_log.txt', 'a') as f:
         await f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Processing {len(news_df)} unlabeled news rows\n")
     
-    # for _, row in news_df.iterrows():
-    #     # Placeholder for sentiment analysis logic
-    #     # Example: sentiment = analyze_sentiment(row["description"]) # Implement your sentiment analysis
-    #     sentiment = "neutral"  # Replace with actual sentiment analysis result
+    # Initialize FinBERT tokenizer and model
+    from transformers import BertTokenizer, AutoModelForSequenceClassification
+    import torch
+    tokenizer = BertTokenizer.from_pretrained('ProsusAI/finbert')
+    finbert_model = AutoModelForSequenceClassification.from_pretrained('ProsusAI/finbert')
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    finbert_model.to(device)
+
+    for _, row in news_df.iterrows():
+        # Tokenize and predict sentiment
+        inputs = tokenizer(row["description"], return_tensors="pt", padding=True, truncation=True, max_length=512).to(device)
+        with torch.no_grad():
+            outputs = finbert_model(**inputs)
+        probs = torch.nn.functional.softmax(outputs.logits, dim=-1)
+        sentiment_idx = torch.argmax(probs, dim=-1).item()
+        sentiment = {0: "positive", 1: "negative", 2: "neutral"}[sentiment_idx]
         
-    #     # Update the database with the sentiment label
-    #     await db.execute(
-    #         "UPDATE {news_table} SET sentiment = ? WHERE id = ?",
-    #         (sentiment, row["id"])
-    #     )
+        # Update the database with the sentiment label
+        await db.execute(
+            "UPDATE {news_table} SET sentiment_label = ? WHERE id = ?",
+            (sentiment, row["id"])
+        )
     
-    # async with aiofiles.open('/data/sentiment_log.txt', 'a') as f:
-    #     await f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Updated {len(news_df)} rows with sentiment labels\n")
+    async with aiofiles.open('/data/sentiment_log.txt', 'a') as f:
+        await f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Updated {len(news_df)} rows with sentiment labels\n")

@@ -72,10 +72,6 @@ class Database:
                     UNIQUE ({self.foreign_key}, date, description)
                 )
             """)
-            # Add sentiment_label column if it doesn't exist
-            await cursor.execute(f"""
-                ALTER TABLE {self.news_table} ADD COLUMN sentiment_label TEXT
-            """)
             await self.conn.commit()
 
     @asynccontextmanager
