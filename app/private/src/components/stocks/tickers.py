@@ -16,12 +16,17 @@ class tickers:
                 # Initialize Database
                 db = Database("../data/stocks.db", primary_table="stocks", secondary_table="stock_data", news_table="news_table", foreign_key="stock_id")
                 
-                # Query to get tickers, latest close price, and sentiment label
+                # Query to get all tickers, latest close price, and latest sentiment label
                 query = """
-                    SELECT s.ticker, sd.close, n.sentiment_label
+                    SELECT s.ticker, sd.close, (
+                        SELECT n.sentiment_label
+                        FROM {news_table} n
+                        WHERE n.{foreign_key} = s.id
+                        ORDER BY n.date DESC
+                        LIMIT 1
+                    ) as sentiment_label
                     FROM {primary_table} s
                     LEFT JOIN {secondary_table} sd ON s.id = sd.{foreign_key}
-                    LEFT JOIN {news_table} n ON s.id = n.{foreign_key}
                     WHERE sd.date = (
                         SELECT MAX(date)
                         FROM {secondary_table}
@@ -29,7 +34,7 @@ class tickers:
                     )
                 """
                 results = await db.fetch_all(query)
-                
+
                 # Format results as array of objects with explicit keys
                 result_array = [
                     {
