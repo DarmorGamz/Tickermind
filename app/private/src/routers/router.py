@@ -51,6 +51,12 @@ class ApiAccess():
 
                     varsIn1 = {}
                     return await tickers_instance.Gsad(op, varsIn1)
+                case "Sentiment":
+                    import components.stocks.sentiment as sentiment
+                    sentiment_instance = sentiment.sentiment()
+
+                    varsIn1 = {}
+                    return await sentiment_instance.Gsad(op, varsIn1)
                 case _:
                     raise HTTPException(400, "Invalid Cmd")
         except Exception as e:
