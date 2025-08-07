@@ -30,9 +30,18 @@ class tickers:
                 """
                 results = await db.fetch_all(query)
                 
-                # Format results as array of arrays
-                result_array = [[row["ticker"], row["close"], row["sentiment_label"] if row["sentiment_label"] else "N/A"] for row in results]
-                return result_array, 200
+                # Format results as array of objects with explicit keys
+                result_array = [
+                    {
+                        "ticker": row["ticker"],
+                        "Close": row["close"],
+                        "Sentiment_Label": row["sentiment_label"] if row["sentiment_label"] else "N/A"
+                    }
+                    for row in results
+                ]
+
+                # Return response with data key
+                return {"data": result_array, "status": 200}
             case "Set":
                 raise HTTPException(400, "Invalid Cmd")
             case "Add":
