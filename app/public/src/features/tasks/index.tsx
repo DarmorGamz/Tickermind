@@ -24,6 +24,7 @@ export default function Tasks() {
         const parsed = raw.data.map((item: any) => ({
           ticker: item.ticker,
           Close: item.Close,
+          Sentiment_Label: item.Sentiment_Label,
         }))
         setData(parsed)
       } catch (err) {

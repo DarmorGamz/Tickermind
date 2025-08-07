@@ -1,0 +1,4 @@
+2025-08-07 18:23:55,693 - components.data_collection.yfinance - INFO - Fetching latest price for AAPL with 1d interval
+2025-08-07 18:23:55,993 - components.data_collection.yfinance - INFO - Fetching latest price for MSFT with 1d interval
+2025-08-07 18:23:56,115 - components.data_collection.yfinance - INFO - Fetching latest price for GOOGL with 1d interval
+2025-08-07 18:23:56,231 - components.data_collection.yfinance - INFO - Fetching latest price for AMZN with 1d interval

@@ -16,4 +16,13 @@ export const stockColumns: ColumnDef<Stock>[] = [
       <div>${row.original.Close.toFixed(2)}</div>
     ),
   },
+  {
+    accessorKey: 'Sentiment_Label',
+    header: 'Sentiment',
+    cell: ({ row }) => (
+      <div className='text-sm'>
+        {row.original.Sentiment_Label}
+      </div>
+    ),
+  }
 ]

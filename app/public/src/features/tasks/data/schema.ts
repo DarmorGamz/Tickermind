@@ -15,6 +15,7 @@ export type Task = z.infer<typeof taskSchema>
 export const stockSchema = z.object({
   ticker: z.string(),
   Close: z.number(),
+  Sentiment_Label: z.string(),
 })
 
 export type Stock = z.infer<typeof stockSchema>
