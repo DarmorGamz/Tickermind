@@ -11,3 +11,10 @@ export const taskSchema = z.object({
 })
 
 export type Task = z.infer<typeof taskSchema>
+
+export const stockSchema = z.object({
+  ticker: z.string(),
+  Close: z.number(),
+})
+
+export type Stock = z.infer<typeof stockSchema>
