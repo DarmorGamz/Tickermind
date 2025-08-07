@@ -5,3 +5,4 @@ apscheduler==3.10.1
 yfinance==0.2.65
 aiofiles==24.1.0
 aiosqlite==0.21.0
+pandas==2.3.1

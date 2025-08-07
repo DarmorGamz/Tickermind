@@ -5,7 +5,7 @@ scheduler = AsyncIOScheduler()
 
 async def startup():
     scheduler.add_job(get_ticker_data, 'interval', seconds=10)
-    scheduler.add_job(get_news_data, 'interval', seconds=10)
+    scheduler.add_job(get_news_data, 'interval', seconds=300)
     scheduler.start()
 
 def shutdown():

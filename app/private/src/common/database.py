@@ -6,7 +6,7 @@ class Database:
     """Singleton class for managing async SQLite database connections and queries."""
     _instance = None
 
-    def __new__(cls, db_path: str, primary_table: str, secondary_table: str, foreign_key: str):
+    def __new__(cls, db_path: str= "", primary_table: str= "", secondary_table: str= "", news_table: str = "", foreign_key: str= ""):
         """Ensures a single instance of the Database class.
 
         Args:
@@ -23,8 +23,9 @@ class Database:
             cls._instance.db_path = db_path
             cls._instance.primary_table = primary_table
             cls._instance.secondary_table = secondary_table
+            cls._instance.news_table = news_table
             cls._instance.foreign_key = foreign_key
-            cls._instance.loop = None  # Will be set in _create_connection
+            cls._instance.loop = None
             cls._instance.conn = None
         return cls._instance
 
@@ -55,6 +56,19 @@ class Database:
                     UNIQUE ({self.foreign_key}, date)
                 )
             """)
+            await cursor.execute(f"""
+                CREATE TABLE IF NOT EXISTS {self.news_table} (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    {self.foreign_key} INTEGER,
+                    date TEXT NOT NULL,
+                    title TEXT NOT NULL,
+                    description TEXT,
+                    content TEXT,
+                    source TEXT NOT NULL,
+                    FOREIGN KEY ({self.foreign_key}) REFERENCES {self.primary_table}(id),
+                    UNIQUE ({self.foreign_key}, date, title)
+                )
+            """)
             await self.conn.commit()
 
     @asynccontextmanager
@@ -83,6 +97,7 @@ class Database:
             query.replace("{primary_table}", self.primary_table)
             .replace("{secondary_table}", self.secondary_table)
             .replace("{foreign_key}", self.foreign_key)
+            .replace("{news_table}", self.news_table)
         )
         async with self._get_cursor() as cursor:
             await cursor.execute(query, params)
@@ -101,6 +116,7 @@ class Database:
             query.replace("{primary_table}", self.primary_table)
             .replace("{secondary_table}", self.secondary_table)
             .replace("{foreign_key}", self.foreign_key)
+            .replace("{news_table}", self.news_table)
         )
         async with self._get_cursor() as cursor:
             await cursor.execute(query, params)
@@ -121,6 +137,7 @@ class Database:
             query.replace("{primary_table}", self.primary_table)
             .replace("{secondary_table}", self.secondary_table)
             .replace("{foreign_key}", self.foreign_key)
+            .replace("{news_table}", self.news_table)
         )
         async with self._get_cursor() as cursor:
             await cursor.execute(query, params)

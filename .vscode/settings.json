@@ -18,5 +18,6 @@
         // Media files, in my way
         "**/.docs": true,
         "**/.media": true,
-    }
+    },
+    "typescript.validate.enable": false
 }
