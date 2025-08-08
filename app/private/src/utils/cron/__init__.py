@@ -1,5 +1,5 @@
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from ..tasks import get_ticker_data, get_news_data,create_sentiment_labels
+from ..stocks import get_ticker_data, get_news_data,create_sentiment_labels
 
 scheduler = AsyncIOScheduler()
 

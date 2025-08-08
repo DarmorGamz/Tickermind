@@ -18,6 +18,7 @@ import {
   IconUserCog,
   IconUserOff,
   IconUsers,
+  IconChartCandle,
 } from '@tabler/icons-react'
 
 import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react'
@@ -47,9 +48,9 @@ export const sidebarData: SidebarData = {
           icon: IconLayoutDashboard,
         },
         {
-          title: 'Tasks',
-          url: '/tasks',
-          icon: IconChecklist,
+          title: 'Stocks',
+          url: '/stocks',
+          icon: IconChartCandle,
         },
         // {
         //   title: 'Apps',
